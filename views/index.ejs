@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo App</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="list-title">
+    <h1>Todo List</h1>
+    <form style="display: flex; gap: 10px" action="/" method="POST">
+      <input type="text" name="todo" placeholder="New task..." required>
+      <button type="submit">Add</button>
+    </form>
+     <select style="margin-top: 10px;" class="select" name="status">
+              <option value ="pending">Sort Tasks</option>
+              <option value ="completed">completed</option>
+              <option value ="pending">pending</option>
+            </select>
+    </div>
+    <ul>
+      <% todos.forEach((item, index) => { %>
+        <li>
+          <%= item %>
+          <form action="/delete" method="POST" style="display:inline">
+            <input type="hidden" name="index" value="<%= index %>">
+            <select class="select" name="status">
+              <option value ="pending">pending</option>
+              <option value ="completed">completed</option>
+              <option value ="deleted">deleted</option>
+            </select>
+            <button style="cursor: pointer"  type="submit">❌</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+</body>
+</html>
