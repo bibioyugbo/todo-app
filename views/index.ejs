@@ -5,35 +5,52 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+
+
+    <h1 style="text-align: center;">Welcome, <%= user.name %>!</h1>
+     <!-- <% if (typeof token !== 'undefined' && token) { %>
+  <p>Your token is: <%= token %></p>
+    <% } %> -->
   <div class="container">
+       
     <div class="list-title">
     <h1>Todo List</h1>
-    <form style="display: flex; gap: 10px" action="/" method="POST">
-      <input type="text" name="todo" placeholder="New task..." required>
-      <button type="submit">Add</button>
+   
+    <form action="/api/v1/tasks" method="GET">
+     <div>Sort Tasks</div>
+     <select style="margin-top: 10px;" class="select" onchange="this.form.submit()" name="status">
+             <option value="completed" <%= selectedStatus === 'completed' ? 'selected' : '' %>>completed</option>
+             <option value="pending" <%= selectedStatus === 'pending' ? 'selected' : '' %>>pending</option>
+
+      </select>
     </form>
-     <select style="margin-top: 10px;" class="select" name="status">
-              <option value ="pending">Sort Tasks</option>
-              <option value ="completed">completed</option>
-              <option value ="pending">pending</option>
-            </select>
     </div>
     <ul>
+    <% if (todos.length === 0) { %>
+      <li>No tasks available.</li>
+    <% } else { %>
       <% todos.forEach((item, index) => { %>
-        <li>
-          <%= item %>
-          <form action="/delete" method="POST" style="display:inline">
-            <input type="hidden" name="index" value="<%= index %>">
-            <select class="select" name="status">
-              <option value ="pending">pending</option>
-              <option value ="completed">completed</option>
-              <option value ="deleted">deleted</option>
-            </select>
-            <button style="cursor: pointer"  type="submit">❌</button>
-          </form>
-        </li>
-      <% }) %>
-    </ul>
+      <li style="align-items: center;display: flex; justify-content:space-between">
+        <strong><%= item.title %></strong> - <%= item.description %> 
+       <form action="/api/v1/tasks/<%= item._id %>?_method=PUT" method="POST">
+        <select name="status" onchange="this.form.submit()">
+          <option value="pending" <%= item.task_status === 'pending' ? 'selected' : '' %>>Pending</option>
+          <option value="completed" <%= item.task_status === 'completed' ? 'selected' : '' %>>Completed</option>
+          <option value="deleted" <%= item.task_status === 'deleted' ? 'selected' : '' %>>Deleted</option>
+        </select>
+        <input type="hidden" name="_method" value="PUT">
+      </form>
+      </li>
+    <% }) %>
+  <% } %>
+</ul>
+
+    <form style="display: flex; flex-direction: column; gap: 10px;" action="/api/v1/tasks" method="POST">
+      <input type="text" name="title" placeholder="Task title..." required>
+      <input type="text" name="description" placeholder="Task description..." required></textarea>
+      <input type="hidden" name="user_id" value="<%= user.id %>">
+      <button type="submit">Add Task</button>
+    </form>
   </div>
 </body>
 </html>

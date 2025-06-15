@@ -13,12 +13,13 @@ const taskSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'deleted', 'completed'],
         default: 'pending',
-        required:true,  
+        // required:true,  
     },
-    user_id:{
-        type:String,
-        required:true,  
-    },
+   user_id: {
+    type: mongoose.Schema.Types.ObjectId, // Tells Mongoose it's a reference
+    ref: 'User',                          //Links to the User model
+    required: true
+  },
 },
   {timestamps: true }
 )
